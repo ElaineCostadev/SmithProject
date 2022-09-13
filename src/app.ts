@@ -1,12 +1,12 @@
 import express from 'express';
 import 'express-async-errors';
 import errorMiddleware from './errors/errorMiddleware';
-import routes from './routes/routes';
+import route from './routes';
 
 const app = express();
 
 app.use(express.json());
-app.use(routes);
+app.use('/products', route.productRoutes);
 
 app.use(errorMiddleware);
 
