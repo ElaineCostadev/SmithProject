@@ -6,6 +6,13 @@ const productService = {
     const result = await productModel.getAll();
     return result;
   },
+
+  create: async (product: Iproducts) => {
+    const { insertId } = await productModel.create(product);
+    const newProduct = product;
+    newProduct.id = insertId;
+    return { ...newProduct };
+  },
 };
 
 export default productService;
