@@ -6,6 +6,7 @@ import route from './routes';
 const app = express();
 
 app.use(express.json());
+
 app.use('/products', route.productRoutes);
 app.use('/orders', route.ordersRoutes);
 app.use('/users', route.usersController);
