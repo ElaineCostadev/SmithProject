@@ -7,6 +7,7 @@ const app = express();
 
 app.use(express.json());
 
+app.use('/login', route.loginRoute);
 app.use('/products', route.productRoutes);
 app.use('/orders', route.ordersRoutes);
 app.use('/users', route.usersController);
