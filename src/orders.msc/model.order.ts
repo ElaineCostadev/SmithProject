@@ -1,4 +1,4 @@
-import { RowDataPacket } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import connection from '../models/connection';
 
 // ajuda para encontrar a query JSON_ARRAYAGG com Luiz Guilherme e Gabriel Kauer
@@ -17,6 +17,24 @@ const ordersModel = {
     const [resultQuery] = await connection.execute<RowDataPacket[]>(queryOrdersWithProducts);
 
     return resultQuery;
+  },
+
+  create: async (user: RowDataPacket[0], productsIds: []) => {
+    // insiro o Id encontrado anteriomente e insiro na tabela Order
+    const queryOrder = 'INSERT INTO Trybesmith.Orders (userId) VALUES (?);';
+    const [resultOrder] = await connection
+      .execute<ResultSetHeader>(queryOrder, [user.id]);
+
+    // acesso cada produto para atualizar
+    // pego os produtos inseridos no body para cadastrar na table products com o Order encontrado anteriormente
+    const queryProducts = ` UPDATE Trybesmith.Products
+                            SET orderId = ?
+                            WHERE id = ?;`;
+    productsIds.forEach((async (eachProduct: []) => {
+      await connection.execute(queryProducts, [resultOrder.insertId, eachProduct]);
+    }));
+
+    return { userId: user.id, productsIds };
   },
 };
 
