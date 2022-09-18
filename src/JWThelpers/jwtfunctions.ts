@@ -9,12 +9,26 @@ const jwtCode = {
     return token;
   },
 
-  validateToken: (token: string): JwtPayload | string => {
-    const decode = jwt.verify(token, jwtSecret);
-    if (!token) throw new CustomError(401, 'Token not found');
-    
-    return decode;
+  validateToken: (token: string): JwtPayload | string | unknown => {
+    try {
+      const verify = jwt.verify(token, jwtSecret);
+      return verify;
+    } catch (error) {
+      if (error) throw new CustomError(401, 'Invalid token');
+    }
   },
 };
 
 export default jwtCode;
+
+/*
+preciso de catch para capturar este erro que o proprio JWT lança
+
+validateToken: (token: string): JwtPayload | string => {
+  const decode = jwt.verify(token, jwtSecret);
+  if (decode) throw new CustomError(401, 'Token not found');
+  
+  return decode;
+},
+
+*/
